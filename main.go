@@ -1,16 +1,22 @@
 package main
 
 import (
-    "fmt"
-    "net/http"
+	"fmt"
+	"net/http"
+	"os"
 )
 
-func main() {
-    http.HandleFunc("/", handler)
-    fmt.Println("Server starting on port 8080...")
-    http.ListenAndServe(":8080", nil)
+func Handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello, World!")
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello, World!")
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	http.HandleFunc("/", Handler)
+	fmt.Printf("Server starting on port %s...\n", port)
+	http.ListenAndServe(":"+port, nil)
 }
